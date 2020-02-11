@@ -10,7 +10,6 @@ def connect_serial():
     )
     return ser_conn
 
-
 while True:
     serial_port = ""
 
@@ -21,8 +20,13 @@ while True:
         print(serial_port)
 
     if serial_port == "":
-        print("DK board don't connect")
+        # print("DK board don't connect")
         # DK보드가 연결되지 않은 상태이다
+        f = open("./serial_data.txt", "w")
+        f.write("disconnection")
+        # f = open("./serial_data.txt", "r")
+        # print(f.read())
+        f.close()
     else:
         # DK보드가 연결되었으므로 serial data를 읽어온다
         print("DK board connection state")
@@ -46,10 +50,10 @@ while True:
                 vstr = vstr.rstrip(",")
                 f = open("./serial_data.txt", "w")
                 f.writelines(vstr)
-                f.close()
                 print(vstr)
+                f.close()
             else:
-                print("error connect")
+                # print("error connect")
                 ser.close()
                 break
         pass
