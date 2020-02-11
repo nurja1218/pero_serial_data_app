@@ -4,7 +4,7 @@ import sys, serial, time, threading
 import psutil
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import QObject, QThread, QTimer
-
+from PyQt5.QtGui import QPixmap
 
 label_data = []
 
@@ -343,7 +343,7 @@ class Ui_Form(QtWidgets.QWidget):
         self.gridLayout_28.setObjectName("gridLayout_28")
         self.finger = QtWidgets.QLabel(self.gridLayoutWidget)
         self.finger.setText("")
-        self.finger.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
+        self.finger.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignTrailing | QtCore.Qt.AlignVCenter)
         self.finger.setObjectName("finger")
         self.gridLayout_28.addWidget(self.finger, 0, 0, 1, 1)
         self.verticalLayout.addLayout(self.gridLayout_28)
@@ -351,7 +351,7 @@ class Ui_Form(QtWidgets.QWidget):
         self.gridLayout_26.setObjectName("gridLayout_26")
         self.touch_panel = QtWidgets.QLabel(self.gridLayoutWidget)
         self.touch_panel.setText("")
-        self.touch_panel.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
+        self.touch_panel.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignTrailing | QtCore.Qt.AlignVCenter)
         self.touch_panel.setObjectName("touch_panel")
         self.gridLayout_26.addWidget(self.touch_panel, 0, 0, 1, 1)
         self.verticalLayout.addLayout(self.gridLayout_26)
@@ -363,17 +363,16 @@ class Ui_Form(QtWidgets.QWidget):
         _translate = QtCore.QCoreApplication.translate
         self.setWindowTitle(_translate("serial", "serial"))
         self.start_btn.setText(_translate("Form", "start"))
+        ##
+        # self.finger.setText("여기엔 어떤 손가락을 누른지 글로 보여줄거에요")
+        # test = QPixmap("./img/1_thumb.png")
+        # test = test.scaled(245, 38)
+        # self.touch_panel.setPixmap(QPixmap(test))
+        ##
 
-        self.serial_state = {"data1": self.data1}
-        self.serial_state["data2"] = self.data2
-        self.serial_state["data3"] = self.data3
-        self.serial_state["data4"] = self.data4
-        self.serial_state["data5"] = self.data5
-        self.serial_state["data6"] = self.data6
-        self.serial_state["data7"] = self.data7
-        self.serial_state["data8"] = self.data8
-        self.serial_state["data9"] = self.data9
-        self.serial_state["data10"] = self.data10
+        self.serial_state = {"data1": self.data1, "data2": self.data2, "data3": self.data3, "data4": self.data4,
+                             "data5": self.data5, "data6": self.data6, "data7": self.data7, "data8": self.data8,
+                             "data9": self.data9, "data10": self.data10}
 
     def start_click(self):
 
@@ -384,10 +383,14 @@ class Ui_Form(QtWidgets.QWidget):
             self.watcher = QtCore.QFileSystemWatcher(self)
             self.watcher.addPath("./serial_data.txt")
             self.watcher.fileChanged.connect(self.label_change)
+            # self.watcher.fi
 
     def label_change(self, path):
         with open(path, 'r') as f:
-            serial_txt = f.read().split(",")
+            text_data = f.read()
+            print(text_data)
+            serial_txt = text_data.split(",")
+            print(serial_txt)
             for i in range(10):
                 if serial_txt[i] == "1":
                     self.serial_state["data"+str(i+1)].setStyleSheet("background-color: red")
@@ -396,68 +399,159 @@ class Ui_Form(QtWidgets.QWidget):
 
                 if serial_txt[0] == "1":
                     self.finger.setText("엄지")
+                    thumb = QPixmap("./img/1_thumb.png")
+                    thumb = thumb.scaled(245, 38)
+                    self.touch_panel.setPixmap(QPixmap(thumb))
                     if serial_txt[1] == "1":
                         self.finger.setText("엄지와 검지")
-                        if serial_txt[4] == "1" or serial_txt[5] == "1":
+                        finger1_2 = QPixmap("./img/finger1_2.png")
+                        finger1_2 = finger1_2.scaled(245, 38)
+                        self.touch_panel.setPixmap(QPixmap(finger1_2))
+                        if serial_txt[3] == "1":
                             self.finger.setText("엄지-검지-중지")
-                            if serial_txt[7] == "1" or serial_txt[8] == "1":
+                            finger1_2_3 = QPixmap("./img/finger1_2_3.png")
+                            finger1_2_3 = finger1_2_3.scaled(245, 38)
+                            self.touch_panel.setPixmap(QPixmap(finger1_2_3))
+                            if serial_txt[6] == "1":
                                 self.finger.setText("엄지-검지-중지-약지")
+                                finger1_2_3_4 = QPixmap("./img/finger1_2_3_4.png")
+                                finger1_2_3_4 = finger1_2_3_4.scaled(245, 38)
+                                self.touch_panel.setPixmap(QPixmap(finger1_2_3_4))
                                 if serial_txt[9] == "1":
                                     self.finger.setText("엄지-검지-중지-약지-새끼")
+                                    finger1_2_3_4_5 = QPixmap("./img/finger_alll.png")
+                                    finger1_2_3_4_5 = finger1_2_3_4_5.scaled(245, 38)
+                                    self.touch_panel.setPixmap(QPixmap(finger1_2_3_4_5))
                             elif serial_txt[9] == "1":
                                 self.finger.setText("엄지-검지-중지-새끼")
-                        elif serial_txt[7] == "1" or serial_txt[8] == "1":
+                                finger1_2_3_5 = QPixmap("./img/finger1_2_3_5.png")
+                                finger1_2_3_5 = finger1_2_3_5.scaled(245, 38)
+                                self.touch_panel.setPixmap(QPixmap(finger1_2_3_5))
+                        elif serial_txt[6] == "1":
                             self.finger.setText("엄지-검지-약지")
+                            finger1_2_4 = QPixmap("./img/finger1_2_4.png")
+                            finger1_2_4 = finger1_2_4.scaled(245, 38)
+                            self.touch_panel.setPixmap(QPixmap(finger1_2_4))
                             if serial_txt[9] == "1":
                                 self.finger.setText("엄지-검지-약지-새끼")
+                                finger1_2_4_5 = QPixmap("./img/finger1_2_4_5.png")
+                                finger1_2_4_5 = finger1_2_4_5.scaled(245, 38)
+                                self.touch_panel.setPixmap(QPixmap(finger1_2_4_5))
                         elif serial_txt[9] == "1":
                             self.finger.setText("엄지-검지-새끼")
-                    elif serial_txt[4] == "1" or serial_txt[5] == "1":
+                            finger1_2_5 = QPixmap("./img/finger1_2_5.png")
+                            finger1_2_5 = finger1_2_5.scaled(245, 38)
+                            self.touch_panel.setPixmap(QPixmap(finger1_2_5))
+                    elif serial_txt[3] == "1":
                         self.finger.setText("엄지와 중지")
-                        if serial_txt[7] == "1" or serial_txt[8] == "1":
+                        finger1_3 = QPixmap("./img/finger1_3.png")
+                        finger1_3 = finger1_3.scaled(245, 38)
+                        self.touch_panel.setPixmap(QPixmap(finger1_3))
+                        if serial_txt[6] == "1":
                             self.finger.setText("엄지-중지-약지")
+                            finger1_3_4 = QPixmap("./img/finger1_3_4.png")
+                            finger1_3_4 = finger1_3_4.scaled(245, 38)
+                            self.touch_panel.setPixmap(QPixmap(finger1_3_4))
                             if serial_txt[9] == "1":
                                 self.finger.setText("엄지-중지-약지-새끼")
+                                finger1_3_4_5 = QPixmap("./img/finger1_3_4_5.png")
+                                finger1_3_4_5 = finger1_3_4_5.scaled(245, 38)
+                                self.touch_panel.setPixmap(QPixmap(finger1_3_4_5))
                         elif serial_txt[9] == "1":
                             self.finger.setText("엄지-중지-새끼")
-                    elif serial_txt[7] == "1" or serial_txt[8] == "1":
+                            finger1_3_5 = QPixmap("./img/finger1_3_5.png")
+                            finger1_3_5 = finger1_3_5.scaled(245, 38)
+                            self.touch_panel.setPixmap(QPixmap(finger1_3_5))
+                    elif serial_txt[6] == "1":
                         self.finger.setText("엄지와 약지")
+                        finger1_4 = QPixmap("./img/finger1_4.png")
+                        finger1_4 = finger1_4.scaled(245, 38)
+                        self.touch_panel.setPixmap(QPixmap(finger1_4))
                         if serial_txt[9] == "1":
                             self.finger.setText("엄지-약지-새끼")
+                            finger1_4_5 = QPixmap("./img/finger1_4_5.png")
+                            finger1_4_5 = finger1_4_5.scaled(245, 38)
+                            self.touch_panel.setPixmap(QPixmap(finger1_4_5))
                     elif serial_txt[9] == "1":
                         self.finger.setText("엄지와 새끼")
+                        finger1_5 = QPixmap("./img/finger1_5.png")
+                        finger1_5 = finger1_5.scaled(245, 38)
+                        self.touch_panel.setPixmap(QPixmap(finger1_5))
                 elif serial_txt[1] == "1":
                     self.finger.setText("검지")
-                    if serial_txt[4] == "1" or serial_txt[5] == "1":
+                    index_finger = QPixmap("./img/2_index_finger.png")
+                    index_finger = index_finger.scaled(245, 38)
+                    self.touch_panel.setPixmap(QPixmap(index_finger))
+                    if serial_txt[3] == "1":
                         self.finger.setText("검지와 중지")
-                        if serial_txt[7] == "1" or serial_txt[8] == "1":
+                        finger2_3 = QPixmap("./img/finger2_3.png")
+                        finger2_3 = finger2_3.scaled(245, 38)
+                        self.touch_panel.setPixmap(QPixmap(finger2_3))
+                        if serial_txt[6] == "1":
                             self.finger.setText("검지-중지-약지")
+                            finger2_3_4 = QPixmap("./img/finger2_3_4.png")
+                            finger2_3_4 = finger2_3_4.scaled(245, 38)
+                            self.touch_panel.setPixmap(QPixmap(finger2_3_4))
                             if serial_txt[9] == "1":
                                 self.finger.setText("검지-중지-약지-새끼")
+                                finger2_3_4_5 = QPixmap("./img/finger2_3_4_5.png")
+                                finger2_3_4_5 = finger2_3_4_5.scaled(245, 38)
+                                self.touch_panel.setPixmap(QPixmap(finger2_3_4_5))
                         elif serial_txt[9] == "1":
                             self.finger.setText("검지-중지-새끼")
-                    elif serial_txt[7] == "1" or serial_txt[8] == "1":
+                            finger2_3_5 = QPixmap("./img/finger2_3_5.png")
+                            finger2_3_5 = finger2_3_5.scaled(245, 38)
+                            self.touch_panel.setPixmap(QPixmap(finger2_3_5))
+                    elif serial_txt[6] == "1":
                         self.finger.setText("검지와 약지")
+                        finger2_4 = QPixmap("./img/finger2_4.png")
+                        finger2_4 = finger2_4.scaled(245, 38)
+                        self.touch_panel.setPixmap(QPixmap(finger2_4))
                         if serial_txt[9] == "1":
                             self.finger.setText("검지-약지-새끼")
+                            finger2_4_5 = QPixmap("./img/finger2_4_5.png")
+                            finger2_4_5 = finger2_4_5.scaled(245, 38)
+                            self.touch_panel.setPixmap(QPixmap(finger2_4_5))
                     elif serial_txt[9] == "1":
                         self.finger.setText("검지와 새끼")
-                elif serial_txt[4] == "1" or serial_txt[5] == "1":
+                        finger2_5 = QPixmap("./img/finger2_5.png")
+                        finger2_5 = finger2_5.scaled(245, 38)
+                        self.touch_panel.setPixmap(QPixmap(finger2_5))
+                elif serial_txt[3] == "1":
                     self.finger.setText("중지")
-                    if serial_txt[7] == "1" or serial_txt[8] == "1":
+                    middle_finger = QPixmap("./img/3_middle_finger.png")
+                    middle_finger = middle_finger.scaled(245, 38)
+                    self.touch_panel.setPixmap(QPixmap(middle_finger))
+                    if serial_txt[6] == "1":
                         self.finger.setText("중지와 약지")
+                        finger3_4 = QPixmap("./img/finger3_4.png")
+                        finger3_4 = finger3_4.scaled(245, 38)
+                        self.touch_panel.setPixmap(QPixmap(finger3_4))
                         if serial_txt[9] == "1":
                             self.finger.setText("중지-약지-새끼")
+                            finger3_4_5 = QPixmap("./img/finger3_4_5.png")
+                            finger3_4_5 = finger3_4_5.scaled(245, 38)
+                            self.touch_panel.setPixmap(QPixmap(finger3_4_5))
                     elif serial_txt[9] == "1":
                         self.finger.setText("중지와 새끼")
-                elif serial_txt[7] == "1" or serial_txt[8] == "1":
+                elif serial_txt[6] == "1":
                     self.finger.setText("약지")
+                    ring_finger = QPixmap("./img/4_ring_finger.png")
+                    ring_finger = ring_finger.scaled(245, 38)
+                    self.touch_panel.setPixmap(QPixmap(ring_finger))
                     if serial_txt[9] == "1":
                         self.finger.setText("약지와 새끼")
+                        finger4_5 = QPixmap("./img/finger4_5.png")
+                        finger4_5 = finger4_5.scaled(245, 38)
+                        self.touch_panel.setPixmap(QPixmap(finger4_5))
                 elif serial_txt[9] == "1":
                     self.finger.setText("새끼")
+                    pinky = QPixmap("./img/5_pinky.png")
+                    pinky = pinky.scaled(245, 38)
+                    self.touch_panel.setPixmap(QPixmap(pinky))
                 else:
                     self.finger.setText("")
+                    self.touch_panel.clear()
 
     def closeEvent(self, event):
         reply = QtWidgets.QMessageBox.question(self, 'Quit', "프로그램을 종료하시겠습니까?",
