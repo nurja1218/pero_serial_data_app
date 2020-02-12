@@ -379,7 +379,7 @@ class Ui_Form(QtWidgets.QWidget):
         reply = QtWidgets.QMessageBox.question(self, "serial", "터치 센서를 확인하겠습니까?", QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
 
         if reply == QtWidgets.QMessageBox.Yes:
-            subprocess_list.append(subprocess.Popen('python serial_data.py', shell=True))
+            subprocess_list.append(subprocess.Popen('serial_data.exe', shell=True))
             self.watcher = QtCore.QFileSystemWatcher(self)
             self.watcher.addPath("./serial_data.txt")
             self.watcher.fileChanged.connect(self.label_change)
@@ -389,9 +389,23 @@ class Ui_Form(QtWidgets.QWidget):
             text_data = f.read()
             if text_data == "disconnection":
                 print(text_data)
+                kill_process()
                 self.watcher.removePath(path)
-                reply = QtWidgets.QMessageBox.question(self, "serial", "연결이 끊어졌습니다.", QtWidgets.QMessageBox.Ok)
+                reply = QtWidgets.QMessageBox.question(self, "serial", "연결에 문제가 생겼습니다.\n다시 연결하고 시도해주세요.", QtWidgets.QMessageBox.Ok)
                 # serial_data를 삭제
+                for i in range(10):
+                    self.serial_state["data"+str(i+1)].setStyleSheet("background-color: #6B9ABF")
+                self.finger.setText("")
+                self.touch_panel.clear()
+            elif text_data == "data_error":
+                print(text_data)
+                kill_process()
+                self.watcher.removePath(path)
+                reply = QtWidgets.QMessageBox.question(self, "serial", "데이터에 문제가 생겼습니다.\n연결을 끊었다가 다시 연결하고 시도해주세요.", QtWidgets.QMessageBox.Ok)
+                for i in range(10):
+                    self.serial_state["data"+str(i+1)].setStyleSheet("background-color: #6B9ABF")
+                self.finger.setText("")
+                self.touch_panel.clear()
             else:
                 serial_txt = text_data.split(",")
 
@@ -423,7 +437,7 @@ class Ui_Form(QtWidgets.QWidget):
                                     self.touch_panel.setPixmap(QPixmap(finger1_2_3_4))
                                     if serial_txt[9] == "1":
                                         self.finger.setText("엄지-검지-중지-약지-새끼")
-                                        finger1_2_3_4_5 = QPixmap("./img/finger_alll.png")
+                                        finger1_2_3_4_5 = QPixmap("./img/finger_all.png")
                                         finger1_2_3_4_5 = finger1_2_3_4_5.scaled(245, 38)
                                         self.touch_panel.setPixmap(QPixmap(finger1_2_3_4_5))
                                 elif serial_txt[9] == "1":
@@ -538,6 +552,9 @@ class Ui_Form(QtWidgets.QWidget):
                                 self.touch_panel.setPixmap(QPixmap(finger3_4_5))
                         elif serial_txt[9] == "1":
                             self.finger.setText("중지와 새끼")
+                            finger3_5 = QPixmap("./img/finger3_5.png")
+                            finger3_5 = finger3_5.scaled(245, 38)
+                            self.touch_panel.setPixmap(QPixmap(finger3_5))
                     elif serial_txt[6] == "1":
                         self.finger.setText("약지")
                         ring_finger = QPixmap("./img/4_ring_finger.png")
