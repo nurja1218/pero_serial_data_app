@@ -66,7 +66,7 @@ try:
                     vstr = vstr.rstrip(",")
                     f = open("./serial_data.txt", "w")
                     f.writelines(vstr)
-                    # print(vstr)
+                    print(vstr)
                     f.close()
                 else:
                     # print("need reconnect")

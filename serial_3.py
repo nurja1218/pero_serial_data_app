@@ -126,10 +126,12 @@ class Ui_Form(QtWidgets.QWidget):
         self.gridLayout.addLayout(self.gridLayout_15, 1, 2, 1, 1)
         self.gridLayout_11 = QtWidgets.QGridLayout()
         self.gridLayout_11.setObjectName("gridLayout_11")
+
         self.start_btn = QtWidgets.QPushButton(self.gridLayoutWidget)
         self.start_btn.setObjectName("start_btn")
         self.gridLayout_11.addWidget(self.start_btn, 0, 0, 1, 1)
         self.start_btn.clicked.connect(self.start_click)
+
         self.gridLayout.addLayout(self.gridLayout_11, 1, 1, 1, 1)
         self.gridLayout_18 = QtWidgets.QGridLayout()
         self.gridLayout_18.setObjectName("gridLayout_18")
@@ -425,7 +427,7 @@ class Ui_Form(QtWidgets.QWidget):
                             finger1_2 = QPixmap("./img/finger1_2.png")
                             finger1_2 = finger1_2.scaled(245, 38)
                             self.touch_panel.setPixmap(QPixmap(finger1_2))
-                            if serial_txt[3] == "1":
+                            if serial_txt[4] == "1":
                                 self.finger.setText("엄지-검지-중지")
                                 finger1_2_3 = QPixmap("./img/finger1_2_3.png")
                                 finger1_2_3 = finger1_2_3.scaled(245, 38)
@@ -460,7 +462,7 @@ class Ui_Form(QtWidgets.QWidget):
                                 finger1_2_5 = QPixmap("./img/finger1_2_5.png")
                                 finger1_2_5 = finger1_2_5.scaled(245, 38)
                                 self.touch_panel.setPixmap(QPixmap(finger1_2_5))
-                        elif serial_txt[3] == "1":
+                        elif serial_txt[4] == "1":
                             self.finger.setText("엄지와 중지")
                             finger1_3 = QPixmap("./img/finger1_3.png")
                             finger1_3 = finger1_3.scaled(245, 38)
@@ -500,7 +502,7 @@ class Ui_Form(QtWidgets.QWidget):
                         index_finger = QPixmap("./img/2_index_finger.png")
                         index_finger = index_finger.scaled(245, 38)
                         self.touch_panel.setPixmap(QPixmap(index_finger))
-                        if serial_txt[3] == "1":
+                        if serial_txt[4] == "1":
                             self.finger.setText("검지와 중지")
                             finger2_3 = QPixmap("./img/finger2_3.png")
                             finger2_3 = finger2_3.scaled(245, 38)
@@ -535,7 +537,7 @@ class Ui_Form(QtWidgets.QWidget):
                             finger2_5 = QPixmap("./img/finger2_5.png")
                             finger2_5 = finger2_5.scaled(245, 38)
                             self.touch_panel.setPixmap(QPixmap(finger2_5))
-                    elif serial_txt[3] == "1":
+                    elif serial_txt[4] == "1":
                         self.finger.setText("중지")
                         middle_finger = QPixmap("./img/3_middle_finger.png")
                         middle_finger = middle_finger.scaled(245, 38)
