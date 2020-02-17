@@ -729,6 +729,7 @@ class Ui_Form(QtWidgets.QWidget):
         self.finger_5.setText(_translate("serial", ""))
         self.des_finger_4.setText(_translate("serial", "<html><head/><body><p>Finger recognition / <span style=\" font-size:8pt; color:#a9a9a9;\">PERO가 감지한 손가락</span></p></body></html>"))
         self.serial_scan.setText(_translate("serial", "Serial Data Scan"))
+        self.serial_scan.setStyleSheet("background-color: #cccccc;")
 
         # 터치패널 객체 dictionary화
         self.touch_panel = {"touch1": self.touch_1, "touch2": self.touch_2, "touch3": self.touch_3,
@@ -1151,7 +1152,7 @@ class Ui_Form(QtWidgets.QWidget):
 
                             self.finger_3.setText("Middle")
                             self.finger_4.setText("Ring")
-                            self.fin_position_2.setPixmap(self.fin_tp_on)
+                            self.fin_position_3.setPixmap(self.fin_tp_on)
                             self.fin_position_4.setPixmap(self.fin_tp_on)
                             if serial_txt[9] == "1":
                                 for a in range(5):
