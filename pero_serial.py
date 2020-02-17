@@ -889,7 +889,7 @@ class Ui_Form(QtWidgets.QWidget):
                                 self.fin_position_1.setPixmap(self.fin_tp_on)
                                 self.fin_position_2.setPixmap(self.fin_tp_on)
                                 self.fin_position_3.setPixmap(self.fin_tp_on)
-                                if serial_txt[6] == "1":
+                                if serial_txt[7] == "1":
                                     for a in range(5):
                                         self.fin_touch_position["fin_tp" + str(a + 1)].setPixmap(self.fin_tp_off)
                                     for a in range(5):
@@ -924,7 +924,7 @@ class Ui_Form(QtWidgets.QWidget):
                                     self.fin_position_2.setPixmap(self.fin_tp_on)
                                     self.fin_position_3.setPixmap(self.fin_tp_on)
                                     self.fin_position_5.setPixmap(self.fin_tp_on)
-                            elif serial_txt[6] == "1":
+                            elif serial_txt[7] == "1":
                                 for a in range(5):
                                     self.fin_touch_position["fin_tp" + str(a + 1)].setPixmap(self.fin_tp_off)
                                 for a in range(5):
@@ -964,7 +964,7 @@ class Ui_Form(QtWidgets.QWidget):
                             self.finger_txt.setPixmap(self.current_finger["fin_13"])
                             self.fin_position_1.setPixmap(self.fin_tp_on)
                             self.fin_position_3.setPixmap(self.fin_tp_on)
-                            if serial_txt[6] == "1":
+                            if serial_txt[7] == "1":
                                 for a in range(5):
                                     self.fin_touch_position["fin_tp" + str(a + 1)].setPixmap(self.fin_tp_off)
                                 for a in range(5):
@@ -995,7 +995,7 @@ class Ui_Form(QtWidgets.QWidget):
                                 self.fin_position_1.setPixmap(self.fin_tp_on)
                                 self.fin_position_3.setPixmap(self.fin_tp_on)
                                 self.fin_position_5.setPixmap(self.fin_tp_on)
-                        elif serial_txt[6] == "1":
+                        elif serial_txt[7] == "1":
                             for a in range(5):
                                 self.fin_touch_position["fin_tp" + str(a + 1)].setPixmap(self.fin_tp_off)
                             for a in range(5):
@@ -1040,7 +1040,7 @@ class Ui_Form(QtWidgets.QWidget):
                             self.finger_txt.setPixmap(self.current_finger["fin_23"])
                             self.fin_position_2.setPixmap(self.fin_tp_on)
                             self.fin_position_3.setPixmap(self.fin_tp_on)
-                            if serial_txt[6] == "1":
+                            if serial_txt[7] == "1":
                                 for a in range(5):
                                     self.fin_touch_position["fin_tp" + str(a + 1)].setPixmap(self.fin_tp_off)
                                 for a in range(5):
@@ -1071,7 +1071,7 @@ class Ui_Form(QtWidgets.QWidget):
                                 self.fin_position_2.setPixmap(self.fin_tp_on)
                                 self.fin_position_3.setPixmap(self.fin_tp_on)
                                 self.fin_position_5.setPixmap(self.fin_tp_on)
-                        elif serial_txt[6] == "1":
+                        elif serial_txt[7] == "1":
                             for a in range(5):
                                 self.fin_touch_position["fin_tp" + str(a + 1)].setPixmap(self.fin_tp_off)
                             for a in range(5):
@@ -1107,7 +1107,7 @@ class Ui_Form(QtWidgets.QWidget):
 
                         self.finger_txt.setPixmap(self.current_finger["fin_3"])
                         self.fin_position_3.setPixmap(self.fin_tp_on)
-                        if serial_txt[6] == "1":
+                        if serial_txt[7] == "1":
                             for a in range(5):
                                 self.fin_touch_position["fin_tp" + str(a + 1)].setPixmap(self.fin_tp_off)
                             for a in range(5):
@@ -1135,7 +1135,7 @@ class Ui_Form(QtWidgets.QWidget):
                             self.finger_txt.setPixmap(self.current_finger["fin_35"])
                             self.fin_position_3.setPixmap(self.fin_tp_on)
                             self.fin_position_5.setPixmap(self.fin_tp_on)
-                    elif serial_txt[6] == "1":
+                    elif serial_txt[7] == "1":
                         for a in range(5):
                             self.fin_touch_position["fin_tp" + str(a + 1)].setPixmap(self.fin_tp_off)
                         for a in range(5):
