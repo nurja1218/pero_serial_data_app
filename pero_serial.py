@@ -1,21 +1,89 @@
-import subprocess
 import sys, serial, time, threading
-
+import serial.tools.list_ports as port_list
 import psutil
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import QTimer
 from PyQt5.QtGui import QPixmap, QIcon
 
 label_data = []
-subprocess_list = []
 
 
-def kill_process():
-    for proc in psutil.process_iter():
-        if any(procstr in proc.name() for procstr in
-               ['serial_data.exe', 'serial_data.exe', 'serial_data.exe', 'serial_data.exe']):
-            print(f'Killing {proc.name()}')
-            proc.kill()
+def connect_serial(serial_port):
+    ser_conn = serial.Serial(
+        port=serial_port,
+        baudrate=115200,
+    )
+    return ser_conn
+
+
+def isNumber(s):
+    try:
+        float(s)
+        return True
+    except ValueError:
+        return False
+
+
+def loop_listen():
+    try:
+        while True:
+            time.sleep(0.1)
+            serial_port = ""
+            ports = list(port_list.comports())
+            for p in ports:
+                if "JLink" in str(p):
+                    serial_port = str(p).split(" ")[0]
+
+            if serial_port == "":
+                f = open("./serial_state.txt", "w")
+                f.write("disconnect")
+                f.close()
+                raise NotImplementedError
+            else:
+                f = open("./serial_state.txt", "w")
+                f.write(serial_port)
+                f.close()
+
+            ser = connect_serial(serial_port)
+
+            while True:
+                if ser.readable():
+                    # gyro_axis = ['100', '100', '0']  # 자이로 축값
+                    res = ser.readline()
+                    res_decode = res.decode("utf-8")
+                    line_split = res_decode.replace("\x00", "")
+                    serial_data = line_split.split("\n")
+                    serial_data = serial_data[0].split(",")
+                    # serial_data = gyro_axis + serial_data
+                    errchk = [isNumber(t) for t in serial_data]
+
+                    if errchk == [True, True, True, True, True, True, True, True, True, True, True, True, True]:
+                        intlist_flag = 'True'
+                    else:
+                        intlist_flag = 'False'
+
+                if len(serial_data) == 13 and intlist_flag == 'True':
+                    ######################################
+                    # 하나의 리스트를 한줄로 덮어써서 txt파일에 저장
+                    vstr = ""
+                    i = 0
+                    for data in serial_data:
+                        if i > 2:
+                            vstr = vstr + str(data) + ","
+                        i = i + 1
+                    vstr = vstr.rstrip(",")
+                    f = open("./serial_data.txt", "w")
+                    f.writelines(vstr)
+                    f.close()
+                else:
+                    ##################################
+                    ser.close()
+                    f = open("./serial_data.txt", "w")
+                    f.write("data_error")
+                    f.close()
+                    raise NotImplementedError
+    except NotImplementedError:
+        pass
 
 
 class Ui_Form(QtWidgets.QWidget):
@@ -790,7 +858,6 @@ class Ui_Form(QtWidgets.QWidget):
             self.fin_touch_position["fin_tp" + str(i + 1)].setPixmap(self.fin_tp_off)
             self.fin_touch_position["fin_tp" + str(i + 1)].setAlignment(QtCore.Qt.AlignCenter)
 
-        subprocess_list.append(subprocess.Popen('serial_data.exe', shell=True))
         # serial_data.txt파일의 변화가 생길때마다 label_change함수를 실행
         self.watcher = QtCore.QFileSystemWatcher(self)
         self.watcher.addPath("./serial_data.txt")
@@ -803,11 +870,8 @@ class Ui_Form(QtWidgets.QWidget):
             text_data = f.read()
             # txt파일에 disconnection이 write되었다면(연결이 끊어져있다면)
             if text_data == "disconnection":
-                print(text_data)
-                # subprocess죽이고 txt변화 읽는 path 지우기
-                kill_process()
                 self.watcher.removePath(path)
-                reply = QtWidgets.QMessageBox.question(self, "serial", "연결에 문제가 생겼습니다.\n다시 연결하고 시도해주세요.",
+                reply = QtWidgets.QMessageBox.question(self, "serial", "연결에 문제가 생겼습니다.\n연결을 확인하고 App을 재실행해주세요.",
                                                        QtWidgets.QMessageBox.Ok)
                 # serial_data를 삭제
                 # 터치패널 off 이미지
@@ -826,11 +890,9 @@ class Ui_Form(QtWidgets.QWidget):
 
             # txt파일에 data error 즉, 들어오는 데이터에 이상이 생겼다면
             elif text_data == "data_error":
-                print(text_data)
                 # serial data를 그만 읽고 위젯 모든 객체 초기화
-                kill_process()
                 self.watcher.removePath(path)
-                reply = QtWidgets.QMessageBox.question(self, "serial", "데이터에 문제가 생겼습니다.\n연결을 끊었다가 다시 연결하고 시도해주세요.",
+                reply = QtWidgets.QMessageBox.question(self, "serial", "데이터에 문제가 생겼습니다.\n연결을 확인하고 App을 재실행해주세요.",
                                                        QtWidgets.QMessageBox.Ok)
                 for i in range(10):
                     if i == 0:
@@ -1153,6 +1215,7 @@ class Ui_Form(QtWidgets.QWidget):
                             self.fin_position_4.setPixmap(self.fin_tp_on)
                             self.fin_position_5.setPixmap(self.fin_tp_on)
                     elif serial_txt[9] == "1":
+
                         for a in range(5):
                             self.fin_touch_position["fin_tp" + str(a + 1)].setPixmap(self.fin_tp_off)
                         for a in range(5):
@@ -1173,14 +1236,31 @@ class Ui_Form(QtWidgets.QWidget):
                                                QtWidgets.QMessageBox.No)
 
         if reply == QtWidgets.QMessageBox.Yes:
-            kill_process()
             event.accept()
         else:
             event.ignore()
 
+class Controller:
+    # 마찬가지 위젯 변경 시그널
+    switch_window = QtCore.pyqtSignal()
 
-if __name__ == "__main__":
+    def __init__(self):
+        pass
+
+    def show_main(self):
+        self.serial_ui = Ui_Form()
+        self.serial_ui.show()
+
+
+def main():
+    t = threading.Thread(target=loop_listen, daemon=True)
+    t.start()
     app = QtWidgets.QApplication(sys.argv)
-    ui = Ui_Form()
-    ui.show()
+    controller = Controller()
+    controller.show_main()
     sys.exit(app.exec_())
+
+
+if __name__ == '__main__':
+    main()
+
